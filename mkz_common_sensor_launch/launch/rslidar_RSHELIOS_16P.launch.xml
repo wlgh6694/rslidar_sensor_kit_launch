@@ -1,0 +1,6 @@
+<launch>
+    <arg name="config_path" default="$(find-pkg-share mkz_sensor_kit_description)"/>
+    <include file="$(find-pkg-share rslidar_sdk)/launch/start.launch">
+        <arg name="config_path" value="$(config_path)"/>
+    </include>
+</launch>
