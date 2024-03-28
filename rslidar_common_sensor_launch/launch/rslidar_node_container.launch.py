@@ -24,6 +24,7 @@ from launch.conditions import UnlessCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.actions import LoadComposableNodes
+from launch_ros.actions import Node
 from launch_ros.descriptions import ComposableNode
 import yaml
 
@@ -78,7 +79,7 @@ def launch_setup(context, *args, **kwargs):
             plugin="pointcloud_preprocessor::CropBoxFilterComponent",
             name="crop_box_filter_self",
             remappings=[
-                ("input", "helios_points"),
+                ("input", "pointcloud_raw_ex"),
                 ("output", "self_cropped/pointcloud_ex"),
             ],
             parameters=[cropbox_parameters],
@@ -178,6 +179,47 @@ def generate_launch_description():
     add_launch_arg("lidar_container_name", "nebula_node_container")
     add_launch_arg("output_as_sensor_frame", "True", "output final pointcloud in sensor frame")
 
+    node = Node(
+        package="rslidar_sdk",
+        executable="rslidar_sdk_node",
+        name="rslidar_sdk_node",
+        parameters=[
+            {
+                # Sensor kit settings
+                'launch_driver': LaunchConfiguration('launch_driver'),
+                'use_concat_filter': LaunchConfiguration('use_concat_filter'),
+                'vehicle_id': LaunchConfiguration('vehicle_id'),
+                'vehicle_mirror_param_file': LaunchConfiguration('vehicle_mirror_param_file'),  
+
+                # Lidar settings
+                'lidar_type': LaunchConfiguration('lidar_type'),
+                'msg_source': LaunchConfiguration('msg_source'),
+                'send_packet_ros': LaunchConfiguration('send_packet_ros'),
+                'send_point_cloud_ros': LaunchConfiguration('send_point_cloud_ros'),
+                'msop_port': LaunchConfiguration('msop_port'),
+                'difop_port': LaunchConfiguration('difop_port'),
+                'start_angle': LaunchConfiguration('start_angle'),
+                'end_angle': LaunchConfiguration('end_angle'),
+                'wait_for_difop': LaunchConfiguration('wait_for_difop'),
+                'min_distance': LaunchConfiguration('min_distance'),
+                'max_distance': LaunchConfiguration('max_distance'),
+                'use_lidar_clock': LaunchConfiguration('use_lidar_clock'),
+                'pcap_path': LaunchConfiguration('pcap_path'),
+                'group_address': LaunchConfiguration('group_address'),
+                'host_address': LaunchConfiguration('host_address'),
+
+                # ROS settings
+                'ros_frame_id': LaunchConfiguration('ros_frame_id'),
+                'ros_recv_packet_topic': LaunchConfiguration('ros_recv_packet_topic'),
+                'ros_send_packet_topic': LaunchConfiguration('ros_send_packet_topic'),
+                'ros_send_point_cloud_topic': LaunchConfiguration('ros_send_point_cloud_topic'),
+            }
+        ],
+        remappings=[
+            ("rslidar_points", "pointcloud_raw_ex"),
+        ],
+    )
+
     set_container_executable = SetLaunchConfiguration(
         "container_executable",
         "component_container",
@@ -194,4 +236,5 @@ def generate_launch_description():
         launch_arguments
         + [set_container_executable, set_container_mt_executable]
         + [OpaqueFunction(function=launch_setup)]
+        +[node]
     )
