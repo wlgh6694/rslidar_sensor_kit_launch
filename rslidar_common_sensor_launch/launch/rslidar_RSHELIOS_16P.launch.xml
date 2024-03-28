@@ -1,0 +1,21 @@
+<launch>
+  <!-- Params -->
+  <arg name="return_mode" default="Dual"/>
+  <arg name="vehicle_mirror_param_file"/>
+  <arg name="container_name" default="hesai_node_container"/>
+  <arg name="sensor_frame" default="hesai"/>
+
+  <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/nebula_node_container.launch.py">
+    <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+    <arg name="use_intra_process" value="true"/>
+    <arg name="use_multithread" value="false"/>
+    <arg name="container_name" value="$(var container_name)"/>
+    <arg name="frame_id" value="$(var sensor_frame)"/>
+
+  </include>
+
+  <!-- Velodyne Monitor -->
+  <include file="$(find-pkg-share velodyne_monitor)/launch/velodyne_monitor.launch.xml" if="$(var launch_driver)">
+    <arg name="ip_address" value="$(var sensor_ip)"/>
+  </include>
+</launch>

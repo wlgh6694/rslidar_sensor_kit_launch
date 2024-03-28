@@ -6,13 +6,14 @@
   <arg name="vehicle_mirror_param_file"/>
   <arg name="pointcloud_container_name" default="pointcloud_container"/>
   <arg name="hesai_launch_hw" default="false"/>
+  <arg name="config_path" default="$(find-pkg-share rslidar_sensor_kit_launch)/config">
 
   <group>
     <push-ros-namespace namespace="lidar"/>
 
     <group>
       <push-ros-namespace namespace="top"/>
-      <include file="$(find-pkg-share mkz_common_sensor_launch)/launch/hesai_Pandar64.launch.xml">
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/hesai_Pandar64.launch.xml">
         <arg name="max_range" value="250.0"/>
         <arg name="sensor_frame" value="velodyne_top"/>
         <arg name="sensor_ip" value="192.168.1.201"/>
@@ -21,48 +22,38 @@
         <arg name="scan_phase" value="300.0"/>
         <arg name="launch_driver" value="$(var launch_driver)"/>
         <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
-        <arg name="container_name" value="pointcloud_container"/>
+        <arg name="container_name" value="$(var pointcloud_container_name)"/>
         <arg name="launch_hw" value="$(var hesai_launch_hw)"/>
       </include>
     </group>
 
     <group>
       <push-ros-namespace namespace="left"/>
-      <include file="$(find-pkg-share mkz_common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="5.0"/>
-        <arg name="sensor_frame" value="velodyne_left"/>
-        <arg name="sensor_ip" value="192.168.1.202"/>
-        <arg name="host_ip" value="$(var host_ip)"/>
-        <arg name="data_port" value="2369"/>
-        <arg name="scan_phase" value="180.0"/>
-        <arg name="cloud_min_angle" value="300"/>
-        <arg name="cloud_max_angle" value="60"/>
-        <arg name="launch_driver" value="$(var launch_driver)"/>
+      <include file="$(find-pkg-share rslidar_sdk)/launch/start.launch">
+        <arg name="config_path" value="$(var config_path)/helios_left">
+      </include>
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/rslidar_RSHELIOS_16P.launch.xml">
         <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
-        <arg name="container_name" value="pointcloud_container"/>
+        <arg name="container_name" default="$(var pointcloud_container_name)"/>
+        <arg name="sensor_frame" default="helios_left"/>
       </include>
     </group>
 
     <group>
       <push-ros-namespace namespace="right"/>
-      <include file="$(find-pkg-share mkz_common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="5.0"/>
-        <arg name="sensor_frame" value="velodyne_right"/>
-        <arg name="sensor_ip" value="192.168.1.203"/>
-        <arg name="host_ip" value="$(var host_ip)"/>
-        <arg name="data_port" value="2370"/>
-        <arg name="scan_phase" value="180.0"/>
-        <arg name="cloud_min_angle" value="300"/>
-        <arg name="cloud_max_angle" value="60"/>
-        <arg name="launch_driver" value="$(var launch_driver)"/>
+      <include file="$(find-pkg-share rslidar_sdk)/launch/start.launch">
+        <arg name="config_path" value="$(var config_path)/helios_right">
+      </include>
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/rslidar_RSHELIOS_16P.launch.xml">
         <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
-        <arg name="container_name" value="pointcloud_container"/>
+        <arg name="container_name" default="$(var pointcloud_container_name)"/>
+        <arg name="sensor_frame" default="helios_right"/>
       </include>
     </group>
 
     <group>
       <push-ros-namespace namespace="rear"/>
-      <include file="$(find-pkg-share mkz_common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
         <arg name="max_range" value="1.5"/>
         <arg name="sensor_frame" value="velodyne_rear"/>
         <arg name="sensor_ip" value="192.168.1.204"/>
@@ -77,7 +68,7 @@
       </include>
     </group>
 
-    <include file="$(find-pkg-share mkz_sensor_kit_launch)/launch/pointcloud_preprocessor.launch.py">
+    <include file="$(find-pkg-share rslidar_sensor_kit_launch)/launch/pointcloud_preprocessor.launch.py">
       <arg name="base_frame" value="base_link"/>
       <arg name="use_intra_process" value="true"/>
       <arg name="use_multithread" value="true"/>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mkz_sensor_kit_description)
+project(rslidar_sensor_kit_description)
 
 find_package(ament_cmake_auto REQUIRED)
 
