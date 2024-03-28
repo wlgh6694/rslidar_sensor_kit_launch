@@ -3,7 +3,7 @@
   <arg name="host_ip" default="192.168.1.54"/>
   <arg name="use_concat_filter" default="true"/>
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
-  <arg name="vehicle_mirror_param_file"/>
+  <arg name="vehicle_mirror_param_file" default="$(find-pkg-share $(var vehicle_model)_description)/config/vehicle_info.param.yaml"/>
   <arg name="pointcloud_container_name" default="pointcloud_container"/>
   <arg name="hesai_launch_hw" default="false"/>
 
