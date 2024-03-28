@@ -78,7 +78,7 @@ def launch_setup(context, *args, **kwargs):
             plugin="pointcloud_preprocessor::CropBoxFilterComponent",
             name="crop_box_filter_self",
             remappings=[
-                ("input", "pointcloud_raw_ex"),
+                ("input", "helios_points"),
                 ("output", "self_cropped/pointcloud_ex"),
             ],
             parameters=[cropbox_parameters],
@@ -100,7 +100,7 @@ def launch_setup(context, *args, **kwargs):
             plugin="pointcloud_preprocessor::CropBoxFilterComponent",
             name="crop_box_filter_mirror",
             remappings=[
-                ("input", "helios_points"),
+                ("input", "self_cropped/pointcloud_ex"),
                 # ("input", "pointcloud_raw_ex"),
                 ("output", "mirror_cropped/pointcloud_ex"),
             ],
