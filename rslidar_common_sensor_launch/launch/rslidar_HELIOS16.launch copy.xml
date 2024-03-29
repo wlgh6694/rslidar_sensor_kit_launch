@@ -5,7 +5,6 @@
   <arg name="use_concat_filter" default="true"/>
   <arg name="vehicle_id" default="mkz"/>
   <arg name="vehicle_mirror_param_file"/>
-  <arg name="sensor_frame" default="helios"/>
 
   <!-- LiDAR settings-->
   <arg name="lidar_type" default="RSHELIOS_16P"/>
@@ -25,7 +24,7 @@
   <arg name="host_address" default="192.168.1.54"/>
 
   <!-- ROS settings-->
-  <arg name="ros_frame_id" default="helios"/>
+  <arg name="ros_frame_id" default="fuck"/>
   <arg name="ros_recv_packet_topic" default="/helios_packets"/>
   <arg name="ros_send_packet_topic" default="/helios_packets"/>
   <arg name="ros_send_point_cloud_topic" default="/helios_points"/>
@@ -37,7 +36,7 @@
     <arg name="use_concat_filter" value="$(var use_concat_filter)"/>
     <arg name="vehicle_id" value="$(var vehicle_id)"/>
     <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
-    <arg name="sensor_frame" value="$(var sensor_frame)"/>
+    <arg name="frame_id" value="$(var ros_frame_id)"/>
 
     <!-- LiDAR settings-->
     <arg name="lidar_type" value="$(var lidar_type)"/>
@@ -61,7 +60,7 @@
     <arg name="ros_recv_packet_topic" value="$(var ros_recv_packet_topic)"/>
     <arg name="ros_send_packet_topic" value="$(var ros_send_packet_topic)"/>
     <arg name="ros_send_point_cloud_topic" value="$(var ros_send_point_cloud_topic)"/>
-    <arg name="container_name" default="$(var pointcloud_container_name)"/>
+    <arg name="container_name" value="$(var pointcloud_container_name)"/>
 
   </include>
 

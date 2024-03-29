@@ -216,7 +216,7 @@ def generate_launch_description():
             }
         ],
         remappings=[
-            ("rslidar_points", "pointcloud_raw_ex"),
+            ("helios_points", "pointcloud_raw_ex"),
         ],
     )
 

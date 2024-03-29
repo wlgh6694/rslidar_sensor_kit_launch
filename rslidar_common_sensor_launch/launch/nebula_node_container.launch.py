@@ -33,6 +33,8 @@ def get_lidar_make(sensor_name):
         return "Hesai", ".csv"
     elif sensor_name[:3].lower() in ["hdl", "vlp", "vls"]:
         return "Velodyne", ".yaml"
+    elif sensor_name.lower() in ["helios", "bpearl"]:
+        return "Robosense", None    
     return "unrecognized_sensor_model"
 
 
@@ -74,16 +76,19 @@ def launch_setup(context, *args, **kwargs):
     nebula_decoders_share_dir = get_package_share_directory("nebula_decoders")
 
     # Calibration file
-    sensor_calib_fp = os.path.join(
-        nebula_decoders_share_dir,
-        "calibration",
-        sensor_make.lower(),
-        sensor_model + sensor_extension,
-    )
-    assert os.path.exists(
-        sensor_calib_fp
-    ), "Sensor calib file under calibration/ was not found: {}".format(sensor_calib_fp)
-
+    if sensor_extension is not None: # Velodyne and Hesai
+        sensor_calib_fp = os.path.join(
+            nebula_decoders_share_dir,
+            "calibration",
+            sensor_make.lower(),
+            sensor_model + sensor_extension,
+        )
+        assert os.path.exists(
+            sensor_calib_fp
+        ), "Sensor calib file under calibration/ was not found: {}".format(sensor_calib_fp)
+    else: # Robosense
+        sensor_calib_fp=""
+    
     nodes = []
     nodes.append(
         ComposableNode(

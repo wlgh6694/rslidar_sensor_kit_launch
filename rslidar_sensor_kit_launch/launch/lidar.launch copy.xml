@@ -1,0 +1,131 @@
+<launch>
+  <arg name="launch_driver" default="true"/>
+  <arg name="host_ip" default="192.168.1.54"/>
+  <arg name="use_concat_filter" default="true"/>
+  <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
+  <arg name="vehicle_mirror_param_file" default="$(find-pkg-share $(var vehicle_model)_description)/config/vehicle_info.param.yaml"/>
+  <arg name="pointcloud_container_name" default="pointcloud_container"/>
+  <arg name="hesai_launch_hw" default="false"/>
+
+  <group>
+    <push-ros-namespace namespace="lidar"/>
+
+    <group>
+      <push-ros-namespace namespace="top"/>
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/hesai_Pandar64.launch.xml">
+        <arg name="max_range" value="250.0"/>
+        <arg name="sensor_frame" value="velodyne_top"/>
+        <arg name="sensor_ip" value="192.168.1.201"/>
+        <arg name="host_ip" value="$(var host_ip)"/>
+        <arg name="data_port" value="2368"/>
+        <arg name="scan_phase" value="300.0"/>
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+        <arg name="container_name" value="$(var pointcloud_container_name)"/>
+        <arg name="launch_hw" value="$(var hesai_launch_hw)"/>
+      </include>
+    </group>
+
+    <group>
+      <push-ros-namespace namespace="left"/>
+      <!-- <include file="$(find-pkg-share rslidar_sdk)/launch/start.launch">
+        <arg name="config_path" value="$(var config_path)/helios_left">
+      </include> -->
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/rslidar_RSHELIOS_16P.launch.xml">
+        <!-- Sensor kit settings-->
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="use_concat_filter" value="$(var use_concat_filter)"/>
+        <arg name="vehicle_id" value="$(var vehicle_id)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+
+        <!-- LiDAR settings-->
+        <arg name="lidar_type" value="RSHELIOS_16P"/>
+        <arg name="msg_source" value="1"/>
+        <arg name="send_packet_ros" value="false"/>
+        <arg name="send_point_cloud_ros" value="true"/>
+        <arg name="msop_port" value="6699"/>
+        <arg name="difop_port" value="7788"/>
+        <arg name="start_angle" value="0"/>
+        <arg name="end_angle" value="360"/>
+        <arg name="wait_for_difop" value="true"/>
+        <arg name="min_distance" value="0.2"/>
+        <arg name="max_distance" value="200"/>
+        <arg name="use_lidar_clock" value="false"/>
+        <arg name="pcap_path" value="/home/robosense/lidar.pcap"/>
+        <arg name="group_address" value="224.1.1.1"/>
+        <arg name="host_address" value="$(var host_ip)"/>
+
+        <!-- ROS settings-->
+        <arg name="ros_frame_id" value="helios_left"/>
+        <arg name="ros_recv_packet_topic" value="/helios_packets"/>
+        <arg name="ros_send_packet_topic" value="/helios_packets"/>
+        <arg name="ros_send_point_cloud_topic" value="/helios_points"/>
+        <arg name="container_name" value="$(var pointcloud_container_name)"/>
+
+      </include>
+    </group>
+
+    <group>
+      <push-ros-namespace namespace="right"/>
+      <!-- <include file="$(find-pkg-share rslidar_sdk)/launch/start.launch">
+        <arg name="config_path" value="$(var config_path)/helios_right">
+      </include> -->
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/rslidar_RSHELIOS_16P.launch.xml">
+        <!-- Sensor kit settings-->
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="use_concat_filter" value="$(var use_concat_filter)"/>
+        <arg name="vehicle_id" value="$(var vehicle_id)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+
+        <!-- LiDAR settings-->
+        <arg name="lidar_type" value="RSHELIOS_16P"/>
+        <arg name="msg_source" value="1"/>
+        <arg name="send_packet_ros" value="false"/>
+        <arg name="send_point_cloud_ros" value="true"/>
+        <arg name="msop_port" value="5588"/>
+        <arg name="difop_port" value="6677"/>
+        <arg name="start_angle" value="0"/>
+        <arg name="end_angle" value="360"/>
+        <arg name="wait_for_difop" value="true"/>
+        <arg name="min_distance" value="0.2"/>
+        <arg name="max_distance" value="200"/>
+        <arg name="use_lidar_clock" value="false"/>
+        <arg name="pcap_path" value="/home/robosense/lidar.pcap"/>
+        <arg name="group_address" value="224.1.1.1"/>
+        <arg name="host_address" value="$(var host_ip)"/>
+
+        <!-- ROS settings-->
+        <arg name="ros_frame_id" value="helios_right"/>
+        <arg name="ros_recv_packet_topic" value="/helios_packets"/>
+        <arg name="ros_send_packet_topic" value="/helios_packets"/>
+        <arg name="ros_send_point_cloud_topic" value="/helios_points"/>
+        <arg name="container_name" value="$(var pointcloud_container_name)"/>
+
+      </include>
+    </group>
+
+    <group>
+      <push-ros-namespace namespace="rear"/>
+      <include file="$(find-pkg-share rslidar_common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
+        <arg name="max_range" value="1.5"/>
+        <arg name="sensor_frame" value="velodyne_rear"/>
+        <arg name="sensor_ip" value="192.168.1.204"/>
+        <arg name="host_ip" value="$(var host_ip)"/>
+        <arg name="data_port" value="2371"/>
+        <arg name="scan_phase" value="180.0"/>
+        <arg name="cloud_min_angle" value="300"/>
+        <arg name="cloud_max_angle" value="60"/>
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+        <arg name="container_name" value="pointcloud_container"/>
+      </include>
+    </group>
+
+    <include file="$(find-pkg-share rslidar_sensor_kit_launch)/launch/pointcloud_preprocessor.launch.py">
+      <arg name="base_frame" value="base_link"/>
+      <arg name="use_intra_process" value="true"/>
+      <arg name="use_multithread" value="true"/>
+      <arg name="pointcloud_container_name" value="$(var pointcloud_container_name)"/>
+    </include>
+  </group>
+</launch>
